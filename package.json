@@ -1,0 +1,30 @@
+{
+  "name": "intersection-events",
+  "version": "0.0.0",
+  "description": "Wrapper of IntersectionObserver",
+  "main": "dist/intersection-events.es.js",
+  "unpkg": "dist/intersection-events.iife.min.js",
+  "scripts": {
+    "build": "bili"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ko-yelie/intersection-events.git"
+  },
+  "keywords": [
+    "example"
+  ],
+  "author": "Ko.Yelie",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ko-yelie/intersection-events/issues"
+  },
+  "homepage": "https://github.com/ko-yelie/intersection-events#readme",
+  "devDependencies": {
+    "bili": "^3.0.15"
+  },
+  "dependencies": {
+    "get-elements-array": "^1.0.1",
+    "noop-es2015": "^1.0.1"
+  }
+}
