@@ -1,22 +1,24 @@
 const pkg = require('./package.json')
 
+const dependencies = pkg.dependencies
+  ? ` *
+ * Dependencies
+${Object.keys(pkg.dependencies)
+      .map(name => ` * https://www.npmjs.com/package/${name}\n`)
+      .join('')}`
+  : ''
+
 const banner = `/*!
  * ${pkg.name} v${pkg.version}
  * ${pkg.homepage}
  *
- * @license
- * Copyright (c) 2018 ${pkg.author}
- * Released under the MIT license
- */`
-
-const otherBanner = `
-/*! npm.im/noop-es2015 */
-/*! npm.im/get-elements-array */`
+ * (c) ${pkg.year}-present ${pkg.author}
+ * Released under the ${pkg.license} License.
+${dependencies} */`
 
 module.exports = {
   format: ['es', 'iife', 'iife-min'],
-  moduleName: 'IntersectionEvents',
-  banner: banner + otherBanner,
+  banner,
   js: 'buble',
   map: false
 }
