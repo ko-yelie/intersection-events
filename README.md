@@ -23,6 +23,7 @@ new IntersectionEvents('.js-target', {
 ```js
 new IntersectionEvents('.js-target', {
   onEnter: () => {
+    // when element enter the window
   }
 })
 ```
