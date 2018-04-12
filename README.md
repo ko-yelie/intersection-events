@@ -14,6 +14,15 @@ new IntersectionEvents('.js-target', {
 })
 ```
 
+---
+
 ```html
 <script src="https://unpkg.com/intersection-events"></script>
+```
+
+```js
+new IntersectionEvents('.js-target', {
+  onEnter: () => {
+  }
+})
 ```
