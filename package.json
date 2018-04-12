@@ -1,7 +1,7 @@
 {
   "name": "intersection-events",
   "moduleName": "IntersectionEvents",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "Wrapper of IntersectionObserver",
   "main": "dist/intersection-events.es.js",
   "unpkg": "dist/intersection-events.iife.min.js",
