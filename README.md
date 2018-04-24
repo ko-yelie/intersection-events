@@ -1,20 +1,36 @@
 # intersection-events
-Wrapper of IntersectionObserver
+Wrapper of [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)
+
+You can detect when elements **enter and leave** window.
+
+Less Size, Less Features
+
+## ES Modules
+
+[npm](https://www.npmjs.com/package/intersection-events)
+
+```sh
+npm i intersection-events
+```
+
+[Docs](https://ko-yelie.github.io/intersection-events/class/src/index.js~IntersectionEvents.html)
 
 ```js
 import IntersectionEvents from 'intersection-events'
 
 new IntersectionEvents('.js-target', {
   onEnter: () => {
-    // when element enter the window
+    // When the whole element enters window
   },
   onLeave: () => {
-    // when element leave the window
+    // When the whole element leaves window
   }
 })
 ```
 
----
+## CDN
+
+[Download](https://unpkg.com/intersection-events) (1.4 KB)
 
 ```html
 <script src="https://unpkg.com/intersection-events"></script>
@@ -22,8 +38,16 @@ new IntersectionEvents('.js-target', {
 
 ```js
 new IntersectionEvents('.js-target', {
-  onEnter: () => {
-    // when element enter the window
-  }
+  onEnter: () => {}
 })
 ```
+
+---
+
+If you should support browsers that do not support IntersectionObserver, use [IntersectionObserver polyfill](https://github.com/w3c/IntersectionObserver/tree/master/polyfill).
+
+---
+
+If you want more features, please consider other libraries.
+
+- [Scrollama](https://github.com/russellgoldenberg/scrollama)

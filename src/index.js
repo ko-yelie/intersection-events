@@ -1,29 +1,19 @@
 import noop from 'noop-es2015'
 import getElements from 'get-elements-array'
 
-const MAX_THRESHOLD = 0.99 // 1 だとアニメーションが発火しない端末が出るのでそれを回避
+const MAX_THRESHOLD = 0.99 // If it is 1, a device that will not fire an animation comes out, so avoid it.
 
 /**
  * Wrapper of IntersectionObserver
- *
- * @example
- * new IntersectionEvents('.js-target', {
- *   onEnter: () => {
- *     // 要素がウィンドウ内に入ったとき
- *   },
- *   onLeave: () => {
- *     // 要素がウィンドウ外に出たとき
- *   }
- * })
  */
 export default class IntersectionEvents {
   /**
-   * @param {string|NodeList|Element|Element[]} target - IntersectionObserver 対象要素
+   * @param {string|NodeList|Element|Element[]} target - Target elements (selector or element object)
    * @param {Object} options
-   * @param {function} options.onEnter - 要素がウィンドウ内に入ったときに実行する関数
-   * @param {function} [options.onLeave=noop] - 要素がウィンドウ外に出たときに実行する関数
-   * @param {number} [options.enterThreshold=MAX_THRESHOLD] - 要素がウィンドウ内に入るときの threshold
-   * @param {number} [options.leaveThreshold=0] - 要素がウィンドウ外に出るときの threshold
+   * @param {function} options.onEnter - Event handler when the element enters window
+   * @param {function} [options.onLeave=noop] - Event handler when the element leaves window
+   * @param {number} [options.enterThreshold=1] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element enters window
+   * @param {number} [options.leaveThreshold=0] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element leaves window
    */
   constructor (target, options = {}) {
     const { onEnter, onLeave = noop } = options
@@ -56,11 +46,11 @@ export default class IntersectionEvents {
         const el = entry.target
 
         if (!el.isEnter && isEnter(entry)) {
-          // 要素全体がウィンドウ内に入ったとき
+          // enter
           el.isEnter = true
           onEnter()
         } else if (el.isEnter && isLeave(entry)) {
-          // 要素全体がウィンドウ外に出たとき
+          // leave
           el.isEnter = false
           onLeave()
         }
@@ -80,7 +70,7 @@ export default class IntersectionEvents {
       let currentObserver = observer
 
       if (isOverEnter || isOverLeave) {
-        // 要素の高さがウィンドウより大きいときは、 threshold をウィンドウ内に収まるように変更する
+        // When the height of the element is larger than the window, change threshold so that it fits within the window.
         currentObserver = new IntersectionObserver(callback, {
           threshold: [
             isOverLeave ? leaveThreshold * rate : leaveThreshold,

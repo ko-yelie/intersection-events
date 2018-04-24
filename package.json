@@ -6,7 +6,8 @@
   "main": "dist/intersection-events.es.js",
   "unpkg": "dist/intersection-events.iife.min.js",
   "scripts": {
-    "build": "bili"
+    "build": "bili",
+    "docs": "esdoc"
   },
   "repository": {
     "type": "git",
@@ -14,7 +15,8 @@
   },
   "keywords": [
     "IntersectionObserver",
-    "scroll"
+    "scroll",
+    "es2015"
   ],
   "author": "Ko.Yelie",
   "license": "MIT",
@@ -25,7 +27,10 @@
   "homepage": "https://github.com/ko-yelie/intersection-events#readme",
   "devDependencies": {
     "banner-package": "^0.1.0",
-    "bili": "^3.0.15"
+    "bili": "^3.0.15",
+    "esdoc": "^1.0.4",
+    "esdoc-standard-plugin": "^1.0.0",
+    "marked": "^0.3.19"
   },
   "dependencies": {
     "get-elements-array": "^1.0.1",
