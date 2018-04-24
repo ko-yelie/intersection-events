@@ -5,6 +5,9 @@
   "description": "Wrapper of IntersectionObserver",
   "main": "dist/intersection-events.es.js",
   "unpkg": "dist/intersection-events.iife.min.js",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "bili",
     "docs": "esdoc"
