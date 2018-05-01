@@ -6,6 +6,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "intersection-events/src/lib/utility.js~noop",
+    "function/index.html#static-function-noop",
+    "<span>noop</span> <span class=\"search-result-import-path\">intersection-events/src/lib/utility.js</span>",
+    "function"
+  ],
+  [
     "src/.external-ecmascript.js~array",
     "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
     "src/.external-ecmascript.js~Array",
@@ -298,5 +304,11 @@ window.esdocSearchIndex = [
     "class/src/index.js~IntersectionEvents.html#instance-constructor-constructor",
     "src/index.js~IntersectionEvents#constructor",
     "method"
+  ],
+  [
+    "src/lib/utility.js",
+    "file/src/lib/utility.js.html",
+    "src/lib/utility.js",
+    "file"
   ]
 ]

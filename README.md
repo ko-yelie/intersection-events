@@ -42,7 +42,7 @@ new IntersectionEvents('.js-target', {
 })
 ```
 
----
+## Note
 
 If you should support browsers that do not support IntersectionObserver, use [IntersectionObserver polyfill](https://github.com/w3c/IntersectionObserver/tree/master/polyfill).
 

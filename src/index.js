@@ -1,4 +1,4 @@
-import noop from 'noop-es2015'
+import { noop } from './lib/utility'
 import getElements from 'get-elements-array'
 
 const MAX_THRESHOLD = 0.99 // If it is 1, a device that will not fire an animation comes out, so avoid it.
