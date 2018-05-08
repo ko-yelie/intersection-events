@@ -30,14 +30,15 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~IntersectionEvents.html">IntersectionEvents</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-handler">handler</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#lib">lib</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-noop">noop</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="intersection-events">intersection-events</h1><p>Wrapper of <a href="https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver">IntersectionObserver</a></p>
-<p>You can detect when elements <strong>enter and leave</strong> window.</p>
-<p>Less Size, Less Features</p>
+<p>You can detect when <strong>the whole element enters and leaves</strong> window.</p>
+<p>Less Features, Less Size</p>
 <h2 id="es-modules">ES Modules</h2><p><a href="https://www.npmjs.com/package/intersection-events">npm</a></p>
 <pre><code class="lang-sh"><code class="source-code prettyprint">npm i intersection-events</code>
 </code></pre>
@@ -45,10 +46,10 @@
 <pre><code class="lang-js"><code class="source-code prettyprint">import IntersectionEvents from &apos;intersection-events&apos;
 
 new IntersectionEvents(&apos;.js-target&apos;, {
-  onEnter: () =&gt; {
+  onEnter: el =&gt; {
     // When the whole element enters window
   },
-  onLeave: () =&gt; {
+  onLeave: el =&gt; {
     // When the whole element leaves window
   }
 })</code>
@@ -60,7 +61,7 @@ new IntersectionEvents(&apos;.js-target&apos;, {
   onEnter: () =&gt; {}
 })</code>
 </code></pre>
-<h2 id="note">Note</h2><p>If you should support browsers that do not support IntersectionObserver, use <a href="https://github.com/w3c/IntersectionObserver/tree/master/polyfill">IntersectionObserver polyfill</a>.</p>
+<h2 id="note">Note</h2><p><strong>If you should support browsers that do not support IntersectionObserver, use <a href="https://github.com/w3c/IntersectionObserver/tree/master/polyfill">IntersectionObserver polyfill</a>.</strong></p>
 <hr>
 <p>If you want more features, please consider other libraries.</p>
 <ul>

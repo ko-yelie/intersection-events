@@ -306,6 +306,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/index.js~handler",
+    "typedef/index.html#static-typedef-handler",
+    "src/index.js~handler",
+    "typedef"
+  ],
+  [
     "src/lib/utility.js",
     "file/src/lib/utility.js.html",
     "src/lib/utility.js",
