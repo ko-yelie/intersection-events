@@ -1,9 +1,9 @@
 # intersection-events
 Wrapper of [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)
 
-You can detect when elements **enter and leave** window.
+You can detect when **the whole element enters and leaves** window.
 
-Less Size, Less Features
+Less Features, Less Size
 
 ## ES Modules
 
@@ -19,10 +19,10 @@ npm i intersection-events
 import IntersectionEvents from 'intersection-events'
 
 new IntersectionEvents('.js-target', {
-  onEnter: () => {
+  onEnter: el => {
     // When the whole element enters window
   },
-  onLeave: () => {
+  onLeave: el => {
     // When the whole element leaves window
   }
 })
@@ -44,7 +44,7 @@ new IntersectionEvents('.js-target', {
 
 ## Note
 
-If you should support browsers that do not support IntersectionObserver, use [IntersectionObserver polyfill](https://github.com/w3c/IntersectionObserver/tree/master/polyfill).
+**If you should support browsers that do not support IntersectionObserver, use [IntersectionObserver polyfill](https://github.com/w3c/IntersectionObserver/tree/master/polyfill).**
 
 ---
 
