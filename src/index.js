@@ -10,8 +10,8 @@ export default class IntersectionEvents {
   /**
    * @param {string|NodeList|Element|Element[]} target - Target elements (selector or element object)
    * @param {Object} options
-   * @param {function} options.onEnter - Event handler when the element enters window
-   * @param {function} [options.onLeave=noop] - Event handler when the element leaves window
+   * @param {handler} options.onEnter - Event handler when the element enters window
+   * @param {handler} [options.onLeave=noop] - Event handler when the element leaves window
    * @param {number} [options.enterThreshold=1] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element enters window
    * @param {number} [options.leaveThreshold=0] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element leaves window
    */
@@ -48,11 +48,11 @@ export default class IntersectionEvents {
         if (!el.isEnter && isEnter(entry)) {
           // enter
           el.isEnter = true
-          onEnter()
+          onEnter(el)
         } else if (el.isEnter && isLeave(entry)) {
           // leave
           el.isEnter = false
-          onLeave()
+          onLeave(el)
         }
       })
     }
@@ -83,3 +83,8 @@ export default class IntersectionEvents {
     })
   }
 }
+
+/**
+ * @typedef {function} handler
+ * @param {Element} el - element object
+ */
