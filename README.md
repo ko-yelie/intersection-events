@@ -30,7 +30,7 @@ new IntersectionEvents('.js-target', {
 
 ## CDN
 
-[Download](https://unpkg.com/intersection-events) (1.4 KB)
+[Download](https://unpkg.com/intersection-events) (1.7 KB)
 
 ```html
 <script src="https://unpkg.com/intersection-events"></script>
