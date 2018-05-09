@@ -1,5 +1,5 @@
 # intersection-events
-Wrapper of [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)
+Wrapper of [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)
 
 You can detect when **the whole element enters and leaves** window.
 
@@ -28,6 +28,17 @@ new IntersectionEvents('.js-target', {
 })
 ```
 
+If you want to detect enter only once, set `isOnce` option to `true`.
+
+```js
+new IntersectionEvents('.js-target', {
+  onEnter: el => {
+    // Do only once
+  },
+  isOnce: true
+})
+```
+
 ## CDN
 
 [Download](https://unpkg.com/intersection-events) (1.7 KB)
@@ -44,7 +55,7 @@ new IntersectionEvents('.js-target', {
 
 ## Note
 
-**If you should support browsers that do not support IntersectionObserver, use [IntersectionObserver polyfill](https://github.com/w3c/IntersectionObserver/tree/master/polyfill).**
+**If you should support browsers that do not support `IntersectionObserver`, use [`IntersectionObserver` polyfill](https://github.com/w3c/IntersectionObserver/tree/master/polyfill).**
 
 ---
 
