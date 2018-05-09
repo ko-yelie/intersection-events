@@ -36,7 +36,7 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="intersection-events">intersection-events</h1><p>Wrapper of <a href="https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver">IntersectionObserver</a></p>
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="intersection-events">intersection-events</h1><p>Wrapper of <a href="https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver"><code>IntersectionObserver</code></a></p>
 <p>You can detect when <strong>the whole element enters and leaves</strong> window.</p>
 <p>Less Features, Less Size</p>
 <h2 id="es-modules">ES Modules</h2><p><a href="https://www.npmjs.com/package/intersection-events">npm</a></p>
@@ -54,6 +54,14 @@ new IntersectionEvents(&apos;.js-target&apos;, {
   }
 })</code>
 </code></pre>
+<p>If you want to detect enter only once, set <code>isOnce</code> option to <code>true</code>.</p>
+<pre><code class="lang-js"><code class="source-code prettyprint">new IntersectionEvents(&apos;.js-target&apos;, {
+  onEnter: el =&gt; {
+    // Do only once
+  },
+  isOnce: true
+})</code>
+</code></pre>
 <h2 id="cdn">CDN</h2><p><a href="https://unpkg.com/intersection-events">Download</a> (1.7 KB)</p>
 <pre><code class="lang-html"><code class="source-code prettyprint">&lt;script src=&quot;https://unpkg.com/intersection-events&quot;&gt;&lt;/script&gt;</code>
 </code></pre>
@@ -61,7 +69,7 @@ new IntersectionEvents(&apos;.js-target&apos;, {
   onEnter: () =&gt; {}
 })</code>
 </code></pre>
-<h2 id="note">Note</h2><p><strong>If you should support browsers that do not support IntersectionObserver, use <a href="https://github.com/w3c/IntersectionObserver/tree/master/polyfill">IntersectionObserver polyfill</a>.</strong></p>
+<h2 id="note">Note</h2><p><strong>If you should support browsers that do not support <code>IntersectionObserver</code>, use <a href="https://github.com/w3c/IntersectionObserver/tree/master/polyfill"><code>IntersectionObserver</code> polyfill</a>.</strong></p>
 <hr>
 <p>If you want more features, please consider other libraries.</p>
 <ul>
