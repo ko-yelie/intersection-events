@@ -57,7 +57,7 @@ new IntersectionEvents('.js-target', {
 | --------- | --------- | --------- |
 | Edge| last version| last version
 
-## Note
+### Note
 
 If you need to support browsers that do **not** support `IntersectionObserver`, load the **[`IntersectionObserver` polyfill](https://github.com/w3c/IntersectionObserver/tree/master/polyfill).**
 
