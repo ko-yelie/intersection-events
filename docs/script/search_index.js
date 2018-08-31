@@ -6,6 +6,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "intersection-events/src/lib/utility.js~getelements",
+    "function/index.html#static-function-getElements",
+    "<span>getElements</span> <span class=\"search-result-import-path\">intersection-events/src/lib/utility.js</span>",
+    "function"
+  ],
+  [
     "intersection-events/src/lib/utility.js~noop",
     "function/index.html#static-function-noop",
     "<span>noop</span> <span class=\"search-result-import-path\">intersection-events/src/lib/utility.js</span>",

@@ -31,17 +31,16 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~IntersectionEvents.html">IntersectionEvents</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-handler">handler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#lib">lib</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-noop">noop</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#lib">lib</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getElements">getElements</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-noop">noop</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/index.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { noop } from &apos;./lib/utility&apos;
-import getElements from &apos;get-elements-array&apos;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { noop, getElements } from &apos;./lib/utility&apos;
 
 const MAX_THRESHOLD = 0.99 // If it is 1, a device that will not fire an animation comes out, so avoid it.
-const THRESHOLD_RATIO = 0.02
 
 /**
  * Wrapper of IntersectionObserver
@@ -71,8 +70,6 @@ export default class IntersectionEvents {
       leaveThreshold = MAX_THRESHOLD
     }
 
-    const thresholdRatio = Math.abs(enterThreshold - leaveThreshold) * THRESHOLD_RATIO
-
     let isEnter
     let isLeave
     if (enterThreshold === leaveThreshold) {
@@ -83,12 +80,12 @@ export default class IntersectionEvents {
       isEnter = entry =&gt; {
         const enterRatio = Math.abs(entry.intersectionRatio - enterThreshold)
         const leaveRatio = Math.abs(entry.intersectionRatio - leaveThreshold)
-        return enterRatio &lt;= leaveRatio &amp;&amp; enterRatio &lt; thresholdRatio
+        return enterRatio &lt;= leaveRatio
       }
       isLeave = entry =&gt; {
         const enterRatio = Math.abs(entry.intersectionRatio - enterThreshold)
         const leaveRatio = Math.abs(entry.intersectionRatio - leaveThreshold)
-        return enterRatio &gt;= leaveRatio &amp;&amp; leaveRatio &lt; thresholdRatio
+        return enterRatio &gt;= leaveRatio
       }
     }
 

@@ -31,21 +31,24 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~IntersectionEvents.html">IntersectionEvents</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-handler">handler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#lib">lib</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-noop">noop</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#lib">lib</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getElements">getElements</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-noop">noop</a></span></span></li>
 </ul>
 </div>
 </nav>
 
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="intersection-events">intersection-events</h1><p>Wrapper of <a href="https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver"><code>IntersectionObserver</code></a></p>
 <p>You can detect when <strong>the whole element enters and leaves</strong> window.</p>
-<p>Less Features, Less Size</p>
-<h2 id="es-modules">ES Modules</h2><p><a href="https://www.npmjs.com/package/intersection-events">npm</a></p>
+<h2 id="installation">Installation</h2><h3 id="es-modules">ES Modules</h3><p><a href="https://www.npmjs.com/package/intersection-events">npm</a></p>
 <pre><code class="lang-sh"><code class="source-code prettyprint">npm i intersection-events</code>
 </code></pre>
-<p><a href="https://ko-yelie.github.io/intersection-events/class/src/index.js~IntersectionEvents.html">Docs</a></p>
-<pre><code class="lang-js"><code class="source-code prettyprint">import IntersectionEvents from &apos;intersection-events&apos;
-
-new IntersectionEvents(&apos;.js-target&apos;, {
+<pre><code class="lang-js"><code class="source-code prettyprint">import IntersectionEvents from &apos;intersection-events&apos;</code>
+</code></pre>
+<h3 id="cdn">CDN</h3><p><a href="https://unpkg.com/intersection-events">unpkg</a> (1.5 KB)</p>
+<pre><code class="lang-html"><code class="source-code prettyprint">&lt;script src=&quot;https://unpkg.com/intersection-events&quot;&gt;&lt;/script&gt;</code>
+</code></pre>
+<h2 id="usage">Usage</h2><p><a href="https://ko-yelie.github.io/intersection-events/class/src/index.js~IntersectionEvents.html">Docs</a></p>
+<pre><code class="lang-js"><code class="source-code prettyprint">new IntersectionEvents(&apos;.js-target&apos;, {
   onEnter: el =&gt; {
     // When the whole element enters window
   },
@@ -60,13 +63,6 @@ new IntersectionEvents(&apos;.js-target&apos;, {
     // Do only once
   },
   isOnce: true
-})</code>
-</code></pre>
-<h2 id="cdn">CDN</h2><p><a href="https://unpkg.com/intersection-events">Download</a> (1.7 KB)</p>
-<pre><code class="lang-html"><code class="source-code prettyprint">&lt;script src=&quot;https://unpkg.com/intersection-events&quot;&gt;&lt;/script&gt;</code>
-</code></pre>
-<pre><code class="lang-js"><code class="source-code prettyprint">new IntersectionEvents(&apos;.js-target&apos;, {
-  onEnter: () =&gt; {}
 })</code>
 </code></pre>
 <h2 id="browsers-support">Browsers support</h2><table>

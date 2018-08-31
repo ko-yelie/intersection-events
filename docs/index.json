@@ -567,7 +567,7 @@
     "__docId__": 48,
     "kind": "file",
     "name": "src/index.js",
-    "content": "import { noop } from './lib/utility'\nimport getElements from 'get-elements-array'\n\nconst MAX_THRESHOLD = 0.99 // If it is 1, a device that will not fire an animation comes out, so avoid it.\nconst THRESHOLD_RATIO = 0.02\n\n/**\n * Wrapper of IntersectionObserver\n */\nexport default class IntersectionEvents {\n  /**\n   * @param {string|NodeList|Element|Element[]} target - Target elements (selector or element object)\n   * @param {Object} options\n   * @param {handler} options.onEnter - Event handler when the element enters window\n   * @param {handler} [options.onLeave=noop] - Event handler when the element leaves window\n   * @param {number} [options.enterThreshold=1] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element enters window\n   * @param {number} [options.leaveThreshold=0] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element leaves window\n   * @param {boolean} [options.isOnce=false] - Whether to detect enter only once\n   */\n  constructor (target, options = {}) {\n    const {\n      onEnter,\n      onLeave = noop,\n      isOnce = false\n    } = options\n    let { enterThreshold = MAX_THRESHOLD, leaveThreshold = 0 } = options\n\n    if (enterThreshold === 1) {\n      enterThreshold = MAX_THRESHOLD\n    }\n    if (leaveThreshold === 1) {\n      leaveThreshold = MAX_THRESHOLD\n    }\n\n    const thresholdRatio = Math.abs(enterThreshold - leaveThreshold) * THRESHOLD_RATIO\n\n    let isEnter\n    let isLeave\n    if (enterThreshold === leaveThreshold) {\n      isEnter = entry => entry.isIntersecting\n      isLeave = entry =>\n        leaveThreshold === 0 ? !entry.isIntersecting : entry.isIntersecting\n    } else {\n      isEnter = entry => {\n        const enterRatio = Math.abs(entry.intersectionRatio - enterThreshold)\n        const leaveRatio = Math.abs(entry.intersectionRatio - leaveThreshold)\n        return enterRatio <= leaveRatio && enterRatio < thresholdRatio\n      }\n      isLeave = entry => {\n        const enterRatio = Math.abs(entry.intersectionRatio - enterThreshold)\n        const leaveRatio = Math.abs(entry.intersectionRatio - leaveThreshold)\n        return enterRatio >= leaveRatio && leaveRatio < thresholdRatio\n      }\n    }\n\n    const callback = entries => {\n      entries.forEach(entry => {\n        const el = entry.target\n\n        if (!el.intersectionEvents.isEnter && isEnter(entry)) {\n          // enter\n          el.intersectionEvents.isEnter = true\n          onEnter(el)\n\n          isOnce && el.intersectionEvents.observer.unobserve(el)\n        } else if (el.intersectionEvents.isEnter && isLeave(entry)) {\n          // leave\n          el.intersectionEvents.isEnter = false\n          onLeave(el)\n        }\n      })\n    }\n\n    const observer = new IntersectionObserver(callback, {\n      threshold: [leaveThreshold, enterThreshold]\n    })\n\n    getElements(target).forEach(el => {\n      el.intersectionEvents = {}\n      el.intersectionEvents.isEnter = false\n\n      const rate = window.innerHeight / el.offsetHeight\n      const isOverEnter = enterThreshold > rate\n      const isOverLeave = leaveThreshold > rate\n      el.intersectionEvents.observer = observer\n\n      if (isOverEnter || isOverLeave) {\n        // When the height of the element is larger than the window, change threshold so that it fits within the window.\n        el.intersectionEvents.observer = new IntersectionObserver(callback, {\n          threshold: [\n            isOverLeave ? leaveThreshold * rate : leaveThreshold,\n            isOverEnter ? enterThreshold * rate : enterThreshold\n          ]\n        })\n      }\n\n      el.intersectionEvents.observer.observe(el)\n    })\n  }\n}\n\n/**\n * @typedef {function} handler\n * @param {Element} el - element object\n */\n",
+    "content": "import { noop, getElements } from './lib/utility'\n\nconst MAX_THRESHOLD = 0.99 // If it is 1, a device that will not fire an animation comes out, so avoid it.\n\n/**\n * Wrapper of IntersectionObserver\n */\nexport default class IntersectionEvents {\n  /**\n   * @param {string|NodeList|Element|Element[]} target - Target elements (selector or element object)\n   * @param {Object} options\n   * @param {handler} options.onEnter - Event handler when the element enters window\n   * @param {handler} [options.onLeave=noop] - Event handler when the element leaves window\n   * @param {number} [options.enterThreshold=1] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element enters window\n   * @param {number} [options.leaveThreshold=0] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element leaves window\n   * @param {boolean} [options.isOnce=false] - Whether to detect enter only once\n   */\n  constructor (target, options = {}) {\n    const {\n      onEnter,\n      onLeave = noop,\n      isOnce = false\n    } = options\n    let { enterThreshold = MAX_THRESHOLD, leaveThreshold = 0 } = options\n\n    if (enterThreshold === 1) {\n      enterThreshold = MAX_THRESHOLD\n    }\n    if (leaveThreshold === 1) {\n      leaveThreshold = MAX_THRESHOLD\n    }\n\n    let isEnter\n    let isLeave\n    if (enterThreshold === leaveThreshold) {\n      isEnter = entry => entry.isIntersecting\n      isLeave = entry =>\n        leaveThreshold === 0 ? !entry.isIntersecting : entry.isIntersecting\n    } else {\n      isEnter = entry => {\n        const enterRatio = Math.abs(entry.intersectionRatio - enterThreshold)\n        const leaveRatio = Math.abs(entry.intersectionRatio - leaveThreshold)\n        return enterRatio <= leaveRatio\n      }\n      isLeave = entry => {\n        const enterRatio = Math.abs(entry.intersectionRatio - enterThreshold)\n        const leaveRatio = Math.abs(entry.intersectionRatio - leaveThreshold)\n        return enterRatio >= leaveRatio\n      }\n    }\n\n    const callback = entries => {\n      entries.forEach(entry => {\n        const el = entry.target\n\n        if (!el.intersectionEvents.isEnter && isEnter(entry)) {\n          // enter\n          el.intersectionEvents.isEnter = true\n          onEnter(el)\n\n          isOnce && el.intersectionEvents.observer.unobserve(el)\n        } else if (el.intersectionEvents.isEnter && isLeave(entry)) {\n          // leave\n          el.intersectionEvents.isEnter = false\n          onLeave(el)\n        }\n      })\n    }\n\n    const observer = new IntersectionObserver(callback, {\n      threshold: [leaveThreshold, enterThreshold]\n    })\n\n    getElements(target).forEach(el => {\n      el.intersectionEvents = {}\n      el.intersectionEvents.isEnter = false\n\n      const rate = window.innerHeight / el.offsetHeight\n      const isOverEnter = enterThreshold > rate\n      const isOverLeave = leaveThreshold > rate\n      el.intersectionEvents.observer = observer\n\n      if (isOverEnter || isOverLeave) {\n        // When the height of the element is larger than the window, change threshold so that it fits within the window.\n        el.intersectionEvents.observer = new IntersectionObserver(callback, {\n          threshold: [\n            isOverLeave ? leaveThreshold * rate : leaveThreshold,\n            isOverEnter ? enterThreshold * rate : enterThreshold\n          ]\n        })\n      }\n\n      el.intersectionEvents.observer.observe(el)\n    })\n  }\n}\n\n/**\n * @typedef {function} handler\n * @param {Element} el - element object\n */\n",
     "static": true,
     "longname": "/Users/koya.iwasaki/web/intersection-events/src/index.js",
     "access": "public",
@@ -586,7 +586,7 @@
     "importPath": "intersection-events/src/index.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 4,
+    "lineNumber": 3,
     "undocument": true,
     "type": {
       "types": [
@@ -597,27 +597,6 @@
   },
   {
     "__docId__": 50,
-    "kind": "variable",
-    "name": "THRESHOLD_RATIO",
-    "memberof": "src/index.js",
-    "static": true,
-    "longname": "src/index.js~THRESHOLD_RATIO",
-    "access": "public",
-    "export": false,
-    "importPath": "intersection-events/src/index.js",
-    "importStyle": null,
-    "description": null,
-    "lineNumber": 5,
-    "undocument": true,
-    "type": {
-      "types": [
-        "number"
-      ]
-    },
-    "ignore": true
-  },
-  {
-    "__docId__": 51,
     "kind": "class",
     "name": "IntersectionEvents",
     "memberof": "src/index.js",
@@ -628,11 +607,11 @@
     "importPath": "intersection-events/src/index.js",
     "importStyle": "IntersectionEvents",
     "description": "Wrapper of IntersectionObserver",
-    "lineNumber": 10,
+    "lineNumber": 8,
     "interface": false
   },
   {
-    "__docId__": 52,
+    "__docId__": 51,
     "kind": "typedef",
     "name": "handler",
     "memberof": "src/index.js",
@@ -661,7 +640,7 @@
     }
   },
   {
-    "__docId__": 53,
+    "__docId__": 52,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/index.js~IntersectionEvents",
@@ -671,7 +650,7 @@
     "longname": "src/index.js~IntersectionEvents#constructor",
     "access": "public",
     "description": "",
-    "lineNumber": 20,
+    "lineNumber": 18,
     "params": [
       {
         "nullable": null,
@@ -757,10 +736,10 @@
     ]
   },
   {
-    "__docId__": 54,
+    "__docId__": 53,
     "kind": "file",
     "name": "src/lib/utility.js",
-    "content": "export function noop () {}\n",
+    "content": "export function noop () {}\n\n/**\n * Convert NodeList to array\n *\n * @param {NodeList} nodeList NodeList\n * @return {NodeList[]} array of NodeList\n */\nfunction convertIntoArray (nodeList) {\n  return nodeList ? Array.prototype.slice.call(nodeList, 0) : []\n}\n\n/**\n * Get elements that can use forEach\n *\n * @param {string|NodeList|Element|Element[]} target - selector or elements\n * @param {Element} context - context element\n * @return {Element[]} array of elements\n */\nexport function getElements (target, context = document) {\n  if (typeof target === 'string') {\n    // string\n    const nodeList = context.querySelectorAll(target)\n    return convertIntoArray(nodeList)\n  } else if (target.length) {\n    if (target.map) {\n      // Array\n      return target\n    } else {\n      // NodeList\n      return convertIntoArray(target)\n    }\n  } else {\n    // Element\n    return [target]\n  }\n}\n",
     "static": true,
     "longname": "/Users/koya.iwasaki/web/intersection-events/src/lib/utility.js",
     "access": "public",
@@ -768,7 +747,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 55,
+    "__docId__": 54,
     "kind": "function",
     "name": "noop",
     "memberof": "src/lib/utility.js",
@@ -787,8 +766,94 @@
     "return": null
   },
   {
+    "__docId__": 55,
+    "kind": "function",
+    "name": "convertIntoArray",
+    "memberof": "src/lib/utility.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/lib/utility.js~convertIntoArray",
+    "access": "public",
+    "export": false,
+    "importPath": "intersection-events/src/lib/utility.js",
+    "importStyle": null,
+    "description": "Convert NodeList to array",
+    "lineNumber": 9,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "NodeList"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "nodeList",
+        "description": "NodeList"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "NodeList[]"
+      ],
+      "spread": false,
+      "description": "array of NodeList"
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 56,
+    "kind": "function",
+    "name": "getElements",
+    "memberof": "src/lib/utility.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "src/lib/utility.js~getElements",
+    "access": "public",
+    "export": true,
+    "importPath": "intersection-events/src/lib/utility.js",
+    "importStyle": "{getElements}",
+    "description": "Get elements that can use forEach",
+    "lineNumber": 20,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "string",
+          "NodeList",
+          "Element",
+          "Element[]"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "target",
+        "description": "selector or elements"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "Element"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "context",
+        "description": "context element"
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Element[]"
+      ],
+      "spread": false,
+      "description": "array of elements"
+    }
+  },
+  {
     "kind": "index",
-    "content": "# intersection-events\nWrapper of [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)\n\nYou can detect when **the whole element enters and leaves** window.\n\nLess Features, Less Size\n\n## ES Modules\n\n[npm](https://www.npmjs.com/package/intersection-events)\n\n```sh\nnpm i intersection-events\n```\n\n[Docs](https://ko-yelie.github.io/intersection-events/class/src/index.js~IntersectionEvents.html)\n\n```js\nimport IntersectionEvents from 'intersection-events'\n\nnew IntersectionEvents('.js-target', {\n  onEnter: el => {\n    // When the whole element enters window\n  },\n  onLeave: el => {\n    // When the whole element leaves window\n  }\n})\n```\n\nIf you want to detect enter only once, set `isOnce` option to `true`.\n\n```js\nnew IntersectionEvents('.js-target', {\n  onEnter: el => {\n    // Do only once\n  },\n  isOnce: true\n})\n```\n\n## CDN\n\n[Download](https://unpkg.com/intersection-events) (1.7 KB)\n\n```html\n<script src=\"https://unpkg.com/intersection-events\"></script>\n```\n\n```js\nnew IntersectionEvents('.js-target', {\n  onEnter: () => {}\n})\n```\n\n## Browsers support\n\n| [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png\" alt=\"Edge\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png\" alt=\"Firefox\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png\" alt=\"Chrome\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Chrome |\n| --------- | --------- | --------- |\n| Edge| last version| last version\n\n## Note\n\nIf you need to support browsers that do **not** support `IntersectionObserver`, load the **[`IntersectionObserver` polyfill](https://github.com/w3c/IntersectionObserver/tree/master/polyfill).**\n\nIf the `IntersectionObserver` polyfill is loaded, browsers support is as follows.\n\n| [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png\" alt=\"IE / Edge\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>IE / Edge | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png\" alt=\"Firefox\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png\" alt=\"Chrome\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png\" alt=\"Safari\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png\" alt=\"iOS Safari\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>iOS Safari |\n| --------- | --------- | --------- | --------- | --------- |\n| IE11, Edge| last version| last version| last version| last version\n\n---\n\nIf you want more features, please consider other libraries.\n\n- [Scrollama](https://github.com/russellgoldenberg/scrollama)\n",
+    "content": "# intersection-events\nWrapper of [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver)\n\nYou can detect when **the whole element enters and leaves** window.\n\n## Installation\n\n### ES Modules\n\n[npm](https://www.npmjs.com/package/intersection-events)\n\n```sh\nnpm i intersection-events\n```\n\n```js\nimport IntersectionEvents from 'intersection-events'\n```\n\n### CDN\n\n[unpkg](https://unpkg.com/intersection-events) (1.5 KB)\n\n```html\n<script src=\"https://unpkg.com/intersection-events\"></script>\n```\n\n## Usage\n\n[Docs](https://ko-yelie.github.io/intersection-events/class/src/index.js~IntersectionEvents.html)\n\n```js\nnew IntersectionEvents('.js-target', {\n  onEnter: el => {\n    // When the whole element enters window\n  },\n  onLeave: el => {\n    // When the whole element leaves window\n  }\n})\n```\n\nIf you want to detect enter only once, set `isOnce` option to `true`.\n\n```js\nnew IntersectionEvents('.js-target', {\n  onEnter: el => {\n    // Do only once\n  },\n  isOnce: true\n})\n```\n\n## Browsers support\n\n| [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png\" alt=\"Edge\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Edge | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png\" alt=\"Firefox\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png\" alt=\"Chrome\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Chrome |\n| --------- | --------- | --------- |\n| Edge| last version| last version\n\n## Note\n\nIf you need to support browsers that do **not** support `IntersectionObserver`, load the **[`IntersectionObserver` polyfill](https://github.com/w3c/IntersectionObserver/tree/master/polyfill).**\n\nIf the `IntersectionObserver` polyfill is loaded, browsers support is as follows.\n\n| [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/edge/edge_48x48.png\" alt=\"IE / Edge\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>IE / Edge | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/firefox/firefox_48x48.png\" alt=\"Firefox\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Firefox | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/chrome/chrome_48x48.png\" alt=\"Chrome\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Chrome | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari/safari_48x48.png\" alt=\"Safari\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>Safari | [<img src=\"https://raw.githubusercontent.com/alrra/browser-logos/master/src/safari-ios/safari-ios_48x48.png\" alt=\"iOS Safari\" width=\"24px\" height=\"24px\" />](http://godban.github.io/browsers-support-badges/)</br>iOS Safari |\n| --------- | --------- | --------- | --------- | --------- |\n| IE11, Edge| last version| last version| last version| last version\n\n---\n\nIf you want more features, please consider other libraries.\n\n- [Scrollama](https://github.com/russellgoldenberg/scrollama)\n",
     "longname": "/Users/koya.iwasaki/web/intersection-events/README.md",
     "name": "./README.md",
     "static": true,
@@ -796,7 +861,7 @@
   },
   {
     "kind": "packageJSON",
-    "content": "{\n  \"name\": \"intersection-events\",\n  \"moduleName\": \"IntersectionEvents\",\n  \"version\": \"0.2.1\",\n  \"description\": \"Wrapper of IntersectionObserver\",\n  \"main\": \"dist/intersection-events.es.js\",\n  \"unpkg\": \"dist/intersection-events.iife.min.js\",\n  \"files\": [\n    \"dist/\"\n  ],\n  \"scripts\": {\n    \"build\": \"bili\",\n    \"docs\": \"esdoc\"\n  },\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/ko-yelie/intersection-events.git\"\n  },\n  \"keywords\": [\n    \"IntersectionObserver\",\n    \"scroll\",\n    \"es2015\"\n  ],\n  \"author\": \"Ko.Yelie\",\n  \"license\": \"MIT\",\n  \"year\": 2018,\n  \"bugs\": {\n    \"url\": \"https://github.com/ko-yelie/intersection-events/issues\"\n  },\n  \"homepage\": \"https://github.com/ko-yelie/intersection-events#readme\",\n  \"devDependencies\": {\n    \"banner-package\": \"^0.1.0\",\n    \"bili\": \"^3.0.15\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\"\n  },\n  \"dependencies\": {\n    \"get-elements-array\": \"^1.0.1\"\n  }\n}\n",
+    "content": "{\n  \"name\": \"intersection-events\",\n  \"moduleName\": \"IntersectionEvents\",\n  \"version\": \"0.2.2\",\n  \"description\": \"Wrapper of IntersectionObserver\",\n  \"main\": \"dist/intersection-events.es.js\",\n  \"unpkg\": \"dist/intersection-events.iife.min.js\",\n  \"files\": [\n    \"dist/\"\n  ],\n  \"scripts\": {\n    \"build\": \"bili\",\n    \"docs\": \"esdoc\"\n  },\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/ko-yelie/intersection-events.git\"\n  },\n  \"keywords\": [\n    \"IntersectionObserver\",\n    \"scroll\",\n    \"es2015\"\n  ],\n  \"author\": \"Ko.Yelie\",\n  \"license\": \"MIT\",\n  \"year\": 2018,\n  \"bugs\": {\n    \"url\": \"https://github.com/ko-yelie/intersection-events/issues\"\n  },\n  \"homepage\": \"https://github.com/ko-yelie/intersection-events#readme\",\n  \"devDependencies\": {\n    \"banner-package\": \"^0.1.0\",\n    \"bili\": \"^3.0.15\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\"\n  }\n}\n",
     "longname": "/Users/koya.iwasaki/web/intersection-events/package.json",
     "name": "package.json",
     "static": true,
