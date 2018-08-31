@@ -21,6 +21,14 @@ export default class IntersectionEvents {
       onLeave = noop,
       isOnce = false
     } = options
+
+    if (!IntersectionObserver) {
+      getElements(target).forEach(el => {
+        onEnter(el)
+      })
+      return
+    }
+
     let { enterThreshold = MAX_THRESHOLD, leaveThreshold = 0 } = options
 
     if (enterThreshold === 1) {

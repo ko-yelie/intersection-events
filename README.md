@@ -19,7 +19,7 @@ import IntersectionEvents from 'intersection-events'
 
 ### CDN
 
-[unpkg](https://unpkg.com/intersection-events) (1.5 KB)
+[unpkg](https://unpkg.com/intersection-events) (1.6 KB)
 
 ```html
 <script src="https://unpkg.com/intersection-events"></script>
