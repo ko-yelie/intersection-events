@@ -62,7 +62,7 @@ export default class IntersectionEvents {
       isOnce = false
     } = options
 
-    if (!&apos;IntersectionObserver&apos; in window) {
+    if (!(&apos;IntersectionObserver&apos; in window)) {
       getElements(target).forEach(el =&gt; {
         onEnter(el)
       })
