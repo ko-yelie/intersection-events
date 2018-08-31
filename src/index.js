@@ -2,7 +2,6 @@ import { noop } from './lib/utility'
 import getElements from 'get-elements-array'
 
 const MAX_THRESHOLD = 0.99 // If it is 1, a device that will not fire an animation comes out, so avoid it.
-const THRESHOLD_RATIO = 0.02
 
 /**
  * Wrapper of IntersectionObserver
@@ -32,8 +31,6 @@ export default class IntersectionEvents {
       leaveThreshold = MAX_THRESHOLD
     }
 
-    const thresholdRatio = Math.abs(enterThreshold - leaveThreshold) * THRESHOLD_RATIO
-
     let isEnter
     let isLeave
     if (enterThreshold === leaveThreshold) {
@@ -44,12 +41,12 @@ export default class IntersectionEvents {
       isEnter = entry => {
         const enterRatio = Math.abs(entry.intersectionRatio - enterThreshold)
         const leaveRatio = Math.abs(entry.intersectionRatio - leaveThreshold)
-        return enterRatio <= leaveRatio && enterRatio < thresholdRatio
+        return enterRatio <= leaveRatio
       }
       isLeave = entry => {
         const enterRatio = Math.abs(entry.intersectionRatio - enterThreshold)
         const leaveRatio = Math.abs(entry.intersectionRatio - leaveThreshold)
-        return enterRatio >= leaveRatio && leaveRatio < thresholdRatio
+        return enterRatio >= leaveRatio
       }
     }
 
