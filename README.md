@@ -3,9 +3,9 @@ Wrapper of [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web
 
 You can detect when **the whole element enters and leaves** window.
 
-Less Features, Less Size
+## Installation
 
-## ES Modules
+### ES Modules
 
 [npm](https://www.npmjs.com/package/intersection-events)
 
@@ -13,11 +13,23 @@ Less Features, Less Size
 npm i intersection-events
 ```
 
+```js
+import IntersectionEvents from 'intersection-events'
+```
+
+### CDN
+
+[unpkg](https://unpkg.com/intersection-events) (1.5 KB)
+
+```html
+<script src="https://unpkg.com/intersection-events"></script>
+```
+
+## Usage
+
 [Docs](https://ko-yelie.github.io/intersection-events/class/src/index.js~IntersectionEvents.html)
 
 ```js
-import IntersectionEvents from 'intersection-events'
-
 new IntersectionEvents('.js-target', {
   onEnter: el => {
     // When the whole element enters window
@@ -36,20 +48,6 @@ new IntersectionEvents('.js-target', {
     // Do only once
   },
   isOnce: true
-})
-```
-
-## CDN
-
-[Download](https://unpkg.com/intersection-events) (1.7 KB)
-
-```html
-<script src="https://unpkg.com/intersection-events"></script>
-```
-
-```js
-new IntersectionEvents('.js-target', {
-  onEnter: () => {}
 })
 ```
 
