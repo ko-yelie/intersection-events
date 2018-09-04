@@ -19,7 +19,7 @@ import IntersectionEvents from 'intersection-events'
 
 ### CDN
 
-[unpkg](https://unpkg.com/intersection-events) (1.6 KB)
+[unpkg](https://unpkg.com/intersection-events) (1.33 KB)
 
 ```html
 <script src="https://unpkg.com/intersection-events"></script>
@@ -38,6 +38,13 @@ new IntersectionEvents('.js-target', {
     // When the whole element leaves window
   }
 })
+```
+
+```html
+<div class="js-target"></div>
+
+<!-- Set threshold only for this element -->
+<div class="js-target" data-enter-threshold="0.5" data-leave-threshold="0.5"></div>
 ```
 
 If you want to detect enter only once, set `isOnce` option to `true`.

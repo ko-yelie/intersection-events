@@ -31,74 +31,68 @@ export default class IntersectionEvents {
 
     let { enterThreshold = MAX_THRESHOLD, leaveThreshold = 0 } = options
 
-    if (enterThreshold === 1) {
-      enterThreshold = MAX_THRESHOLD
-    }
-    if (leaveThreshold === 1) {
-      leaveThreshold = MAX_THRESHOLD
-    }
-
-    let isEnter
-    let isLeave
-    if (enterThreshold === leaveThreshold) {
-      isEnter = entry => entry.isIntersecting
-      isLeave = entry =>
-        leaveThreshold === 0 ? !entry.isIntersecting : entry.isIntersecting
-    } else {
-      isEnter = entry => {
-        const enterRatio = Math.abs(entry.intersectionRatio - enterThreshold)
-        const leaveRatio = Math.abs(entry.intersectionRatio - leaveThreshold)
-        return enterRatio <= leaveRatio
-      }
-      isLeave = entry => {
-        const enterRatio = Math.abs(entry.intersectionRatio - enterThreshold)
-        const leaveRatio = Math.abs(entry.intersectionRatio - leaveThreshold)
-        return enterRatio >= leaveRatio
-      }
-    }
-
-    const callback = entries => {
-      entries.forEach(entry => {
-        const el = entry.target
-
-        if (!el.intersectionEvents.isEnter && isEnter(entry)) {
-          // enter
-          el.intersectionEvents.isEnter = true
-          onEnter(el)
-
-          isOnce && el.intersectionEvents.observer.unobserve(el)
-        } else if (el.intersectionEvents.isEnter && isLeave(entry)) {
-          // leave
-          el.intersectionEvents.isEnter = false
-          onLeave(el)
-        }
-      })
-    }
-
-    const observer = new IntersectionObserver(callback, {
-      threshold: [leaveThreshold, enterThreshold]
-    })
-
     getElements(target).forEach(el => {
-      el.intersectionEvents = {}
-      el.intersectionEvents.isEnter = false
+      let selfEnterThreshold = parseFloat(el.dataset.enterThreshold) || enterThreshold
+      let selfLeaveThreshold = parseFloat(el.dataset.leaveThreshold) || leaveThreshold
 
-      const rate = window.innerHeight / el.offsetHeight
-      const isOverEnter = enterThreshold > rate
-      const isOverLeave = leaveThreshold > rate
-      el.intersectionEvents.observer = observer
+      if (selfEnterThreshold === 1) {
+        selfEnterThreshold = MAX_THRESHOLD
+      }
+      if (selfLeaveThreshold === 1) {
+        selfLeaveThreshold = MAX_THRESHOLD
+      }
 
-      if (isOverEnter || isOverLeave) {
-        // When the height of the element is larger than the window, change threshold so that it fits within the window.
-        el.intersectionEvents.observer = new IntersectionObserver(callback, {
-          threshold: [
-            isOverLeave ? leaveThreshold * rate : leaveThreshold,
-            isOverEnter ? enterThreshold * rate : enterThreshold
-          ]
+      let checkEnter
+      let checkLeave
+      if (selfEnterThreshold === selfLeaveThreshold) {
+        checkEnter = entry => entry.isIntersecting
+        checkLeave = entry =>
+          selfLeaveThreshold === 0 ? !entry.isIntersecting : entry.isIntersecting
+      } else {
+        checkEnter = entry => {
+          const enterRatio = Math.abs(entry.intersectionRatio - selfEnterThreshold)
+          const leaveRatio = Math.abs(entry.intersectionRatio - selfLeaveThreshold)
+          return enterRatio <= leaveRatio
+        }
+        checkLeave = entry => {
+          const enterRatio = Math.abs(entry.intersectionRatio - selfEnterThreshold)
+          const leaveRatio = Math.abs(entry.intersectionRatio - selfLeaveThreshold)
+          return enterRatio >= leaveRatio
+        }
+      }
+
+      let isEnter = false
+      const callback = entries => {
+        entries.forEach(entry => {
+          const el = entry.target
+
+          if (!isEnter && checkEnter(entry)) {
+            // enter
+            isEnter = true
+            onEnter(el)
+
+            isOnce && observer.unobserve(el)
+          } else if (isEnter && checkLeave(entry)) {
+            // leave
+            isEnter = false
+            onLeave(el)
+          }
         })
       }
 
-      el.intersectionEvents.observer.observe(el)
+      // When the height of the element is larger than the window, change threshold so that it fits within the window.
+      const rate = window.innerHeight / el.offsetHeight
+      const isOverEnter = selfEnterThreshold > rate
+      const isOverLeave = selfLeaveThreshold > rate
+
+      const observer = new IntersectionObserver(callback, {
+        threshold: [
+          isOverLeave ? selfLeaveThreshold * rate : selfLeaveThreshold,
+          isOverEnter ? selfEnterThreshold * rate : selfEnterThreshold
+        ]
+      })
+
+      observer.observe(el)
     })
   }
 }
