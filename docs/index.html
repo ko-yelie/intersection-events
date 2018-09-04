@@ -44,7 +44,7 @@
 </code></pre>
 <pre><code class="lang-js"><code class="source-code prettyprint">import IntersectionEvents from &apos;intersection-events&apos;</code>
 </code></pre>
-<h3 id="cdn">CDN</h3><p><a href="https://unpkg.com/intersection-events">unpkg</a> (1.6 KB)</p>
+<h3 id="cdn">CDN</h3><p><a href="https://unpkg.com/intersection-events">unpkg</a> (1.33 KB)</p>
 <pre><code class="lang-html"><code class="source-code prettyprint">&lt;script src=&quot;https://unpkg.com/intersection-events&quot;&gt;&lt;/script&gt;</code>
 </code></pre>
 <h2 id="usage">Usage</h2><p><a href="https://ko-yelie.github.io/intersection-events/class/src/index.js~IntersectionEvents.html">Docs</a></p>
@@ -56,6 +56,11 @@
     // When the whole element leaves window
   }
 })</code>
+</code></pre>
+<pre><code class="lang-html"><code class="source-code prettyprint">&lt;div class=&quot;js-target&quot;&gt;&lt;/div&gt;
+
+&lt;!-- Set threshold only for this element --&gt;
+&lt;div class=&quot;js-target&quot; data-enter-threshold=&quot;0.5&quot; data-leave-threshold=&quot;0.5&quot;&gt;&lt;/div&gt;</code>
 </code></pre>
 <p>If you want to detect enter only once, set <code>isOnce</code> option to <code>true</code>.</p>
 <pre><code class="lang-js"><code class="source-code prettyprint">new IntersectionEvents(&apos;.js-target&apos;, {
