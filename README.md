@@ -3,6 +3,10 @@ Wrapper of [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web
 
 You can detect when **the whole element enters and leaves** window.
 
+## Demo
+
+- [GitHub Pages](https://ko-yelie.github.io/intersection-events/)
+
 ## Installation
 
 ### ES Modules
