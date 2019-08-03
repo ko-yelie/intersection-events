@@ -19,7 +19,7 @@ import IntersectionEvents from 'intersection-events'
 
 ### CDN
 
-[unpkg](https://unpkg.com/intersection-events) (1.33 KB)
+[unpkg](https://unpkg.com/intersection-events)
 
 ```html
 <script src="https://unpkg.com/intersection-events"></script>
@@ -27,7 +27,7 @@ import IntersectionEvents from 'intersection-events'
 
 ## Usage
 
-[Docs](https://ko-yelie.github.io/intersection-events/class/src/index.js~IntersectionEvents.html)
+[Docs](https://ko-yelie.github.io/intersection-events/docs/class/src/index.js~IntersectionEvents.html)
 
 ```js
 new IntersectionEvents('.js-target', {
