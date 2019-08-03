@@ -1,7 +1,7 @@
 {
   "name": "intersection-events",
   "moduleName": "IntersectionEvents",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Wrapper of IntersectionObserver",
   "main": "dist/index.esm.js",
   "unpkg": "dist/index.iife.min.js",
