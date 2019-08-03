@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">src/index.js | intersection-events</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Wrapper of IntersectionObserver"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="intersection-events"><meta property="twitter:description" content="Wrapper of IntersectionObserver"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/ko-yelie/intersection-events"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/src/index.js~IntersectionEvents.html">IntersectionEvents</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-handler">handler</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#modules">modules</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getElements">getElements</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-noop">noop</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">src/index.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { noop, getElements } from &apos;./modules/utility&apos;
+
+const MAX_THRESHOLD = 0.99 // If it is 1, a device that will not fire an animation comes out, so avoid it.
+
+/**
+ * Wrapper of IntersectionObserver
+ */
+export default class IntersectionEvents {
+  /**
+   * @param {string|NodeList|Element|Element[]} target - Target elements (selector or element object)
+   * @param {Object} options
+   * @param {handler} options.onEnter - Event handler when the element enters window
+   * @param {handler} [options.onLeave=noop] - Event handler when the element leaves window
+   * @param {number} [options.enterThreshold=1] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element enters window
+   * @param {number} [options.leaveThreshold=0] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element leaves window
+   * @param {boolean} [options.isOnce=false] - Whether to detect enter only once
+   */
+  constructor (target, options = {}) {
+    const { onEnter } = options
+    const els = getElements(target)
+
+    if (
+      !(&apos;IntersectionObserver&apos; in window) ||
+      document.body.offsetWidth &gt; window.innerWidth // Because there are elements that IntersectionObserver does not fire.
+    ) {
+      els.forEach(el =&gt; {
+        onEnter(el)
+      })
+      return
+    }
+
+    this._ieEls = []
+
+    els.forEach(el =&gt; {
+      this._ieEls.push(new IntersectionEventsEl(el, options))
+    })
+  }
+
+  execute () {
+    if (!this._ieEls) return
+
+    this._ieEls.forEach(el =&gt; {
+      el.execute(el._observer.takeRecords())
+    })
+  }
+
+  destroy () {
+    if (!this._ieEls) return
+
+    this._ieEls.forEach(el =&gt; {
+      el.destroy()
+    })
+  }
+}
+
+/**
+ *
+ */
+class IntersectionEventsEl {
+  /**
+   * @param {string|NodeList|Element|Element[]} target - Target elements (selector or element object)
+   * @param {Object} options
+   * @param {handler} options.onEnter - Event handler when the element enters window
+   * @param {handler} [options.onLeave=noop] - Event handler when the element leaves window
+   * @param {number} [options.enterThreshold=1] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element enters window
+   * @param {number} [options.leaveThreshold=0] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) when element leaves window
+   * @param {number} [options.enterThresholdSp=options.enterThreshold] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) enterThreshold in smartphone view
+   * @param {number} [options.leaveThresholdSp=options.leaveThreshold] - [Threshold](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#Intersection_observer_options) leaveThreshold in smartphone view
+   * @param {boolean} [options.isOnce=false] - Whether to detect enter only once
+   * @param {boolean} [options.isSP=noop] - Function to judge whether smartphone view or not
+   */
+  constructor (el, options = {}) {
+    const { onEnter, onLeave = noop, isSP = noop, isOnce = false } = options
+    this._onEnter = onEnter
+    this._onLeave = onLeave
+    this._isOnce = isOnce
+    const { enterThreshold = MAX_THRESHOLD, leaveThreshold = 0 } = options
+    const {
+      enterThresholdSp = enterThreshold,
+      leaveThresholdSp = leaveThreshold
+    } = options
+
+    this._el = el
+    this._isSP = isSP
+    const isSPView = isSP()
+
+    this._selfEnterThreshold = isSPView
+      ? parseFloat(el.dataset[&apos;enterThresholdSp&apos;]) || enterThresholdSp
+      : parseFloat(el.dataset[&apos;enterThreshold&apos;]) || enterThreshold
+    this._selfLeaveThreshold = isSPView
+      ? parseFloat(el.dataset[&apos;leaveThresholdSp&apos;]) || leaveThresholdSp
+      : parseFloat(el.dataset[&apos;leaveThreshold&apos;]) || leaveThreshold
+
+    this._selfEnterThreshold = Math.min(this._selfEnterThreshold, MAX_THRESHOLD)
+    this._selfLeaveThreshold = Math.min(this._selfLeaveThreshold, MAX_THRESHOLD)
+
+    if (this._selfEnterThreshold === this._selfLeaveThreshold) {
+      this._checkEnter = entry =&gt; entry.isIntersecting
+      this._checkLeave = entry =&gt;
+        this._selfLeaveThreshold === 0 ? !entry.isIntersecting : entry.isIntersecting
+    } else {
+      this._checkEnter = (entry, enterRatio, leaveRatio) =&gt;
+        entry.isIntersecting &amp;&amp; enterRatio &lt;= leaveRatio
+      this._checkLeave = (entry, enterRatio, leaveRatio) =&gt; enterRatio &gt;= leaveRatio
+    }
+
+    this._isEnter = false
+    this._prevTop = document.body.offsetHeight
+
+    // When the height of the element is larger than the window, change threshold so that it fits within the window.
+    const rate = window.innerHeight / el.offsetHeight
+    if (this._selfEnterThreshold &gt; rate) {
+      this._selfEnterThreshold *= rate
+    }
+    if (this._selfLeaveThreshold &gt; rate) {
+      this._selfLeaveThreshold *= rate
+    }
+
+    this._observer = new IntersectionObserver(this.execute.bind(this), {
+      threshold: [this._selfLeaveThreshold, this._selfEnterThreshold]
+    })
+
+    this._observer.observe(el)
+  }
+
+  execute (entries) {
+    entries.forEach(entry =&gt; {
+      const {
+        target,
+        intersectionRatio,
+        boundingClientRect,
+        rootBounds
+      } = entry
+
+      const enterRatio = Math.abs(intersectionRatio - this._selfEnterThreshold)
+      const leaveRatio = Math.abs(intersectionRatio - this._selfLeaveThreshold)
+
+      const currentTop = boundingClientRect.top
+      const isUp = currentTop &gt; this._prevTop
+      const relativeTop =
+        currentTop + boundingClientRect.height * intersectionRatio
+      const topDiff = Math.abs(relativeTop - rootBounds.top)
+      const bottomDiff = Math.abs(relativeTop - rootBounds.bottom)
+      const isTop = topDiff &lt; bottomDiff
+      this._prevTop = currentTop
+
+      if (
+        !this._isEnter &amp;&amp;
+        ((((!isUp &amp;&amp; !isTop) || (isUp &amp;&amp; isTop)) &amp;&amp;
+        this._checkEnter(entry, enterRatio, leaveRatio)) ||
+          entry.intersectionRatio &gt;= this._selfEnterThreshold)
+      ) {
+        // enter
+        this._isEnter = true
+
+        this._onEnter(target, isUp)
+
+        this._isOnce &amp;&amp; this.destroy()
+      } else if (
+        this._isEnter &amp;&amp;
+        ((((!isUp &amp;&amp; isTop) || (isUp &amp;&amp; !isTop)) &amp;&amp;
+        this._checkLeave(entry, enterRatio, leaveRatio)) ||
+          entry.intersectionRatio &lt; this._selfEnterThreshold)
+      ) {
+        // leave
+        this._isEnter = false
+
+        this._onLeave(target, isUp)
+      }
+    })
+  }
+
+  destroy () {
+    this._observer.unobserve(this._el)
+  }
+}
+
+/**
+ * @typedef {function} handler
+ * @param {Element} el - element object
+ * @param {Boolean} isUp - Whether it is scrolling up
+ */
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

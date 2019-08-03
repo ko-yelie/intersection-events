@@ -6,15 +6,15 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "intersection-events/src/lib/utility.js~getelements",
+    "intersection-events/src/modules/utility.js~getelements",
     "function/index.html#static-function-getElements",
-    "<span>getElements</span> <span class=\"search-result-import-path\">intersection-events/src/lib/utility.js</span>",
+    "<span>getElements</span> <span class=\"search-result-import-path\">intersection-events/src/modules/utility.js</span>",
     "function"
   ],
   [
-    "intersection-events/src/lib/utility.js~noop",
+    "intersection-events/src/modules/utility.js~noop",
     "function/index.html#static-function-noop",
-    "<span>noop</span> <span class=\"search-result-import-path\">intersection-events/src/lib/utility.js</span>",
+    "<span>noop</span> <span class=\"search-result-import-path\">intersection-events/src/modules/utility.js</span>",
     "function"
   ],
   [
@@ -312,15 +312,27 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "src/index.js~intersectionevents#destroy",
+    "class/src/index.js~IntersectionEvents.html#instance-method-destroy",
+    "src/index.js~IntersectionEvents#destroy",
+    "method"
+  ],
+  [
+    "src/index.js~intersectionevents#execute",
+    "class/src/index.js~IntersectionEvents.html#instance-method-execute",
+    "src/index.js~IntersectionEvents#execute",
+    "method"
+  ],
+  [
     "src/index.js~handler",
     "typedef/index.html#static-typedef-handler",
     "src/index.js~handler",
     "typedef"
   ],
   [
-    "src/lib/utility.js",
-    "file/src/lib/utility.js.html",
-    "src/lib/utility.js",
+    "src/modules/utility.js",
+    "file/src/modules/utility.js.html",
+    "src/modules/utility.js",
     "file"
   ]
 ]
