@@ -178,5 +178,5 @@ class IntersectionEventsEl {
 /**
  * @typedef {function} handler
  * @param {Element} el - element object
- * @param {Boolean} isUp - Whether it is scrolling up
+ * @param {Boolean} isUp - Whether scroll direction is up
  */

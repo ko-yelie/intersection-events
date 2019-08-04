@@ -35,10 +35,10 @@ import IntersectionEvents from 'intersection-events'
 
 ```js
 new IntersectionEvents('.js-target', {
-  onEnter: el => {
+  onEnter: (el, isUp) => {
     // When the whole element enters window
   },
-  onLeave: el => {
+  onLeave: (el, isUp) => {
     // When the whole element leaves window
   }
 })
@@ -55,7 +55,7 @@ If you want to detect enter only once, set `isOnce` option to `true`.
 
 ```js
 new IntersectionEvents('.js-target', {
-  onEnter: el => {
+  onEnter: (el, isUp) => {
     // Do only once
   },
   isOnce: true
